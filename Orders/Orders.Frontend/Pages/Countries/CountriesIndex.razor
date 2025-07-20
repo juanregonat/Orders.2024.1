@@ -1,15 +1,14 @@
 ﻿@page "/countries"
 
-@inject IRepository repository
-
 <h3>Paises</h3>
 
-@if(Countries == null)
-{
-    <p>Cargando datos</p>
-}
-else
-{
+<div class="mb-3">
+    <a class="btn btn-primary" href="/countries/create">Nuevo país</a>
+
+</div>
+
+<GenericList MyList ="Countries">
+    <Body>
     <table class="table table-striped">
         <thead>
             <tr>
@@ -31,22 +30,7 @@ else
        
         </tbody>
     </table>
-    
-}
+    </Body>
 
+</GenericList>
 
-
-
-
-
-
-@code {
-    public List<Country>? Countries { get; set; }
-
-    protected async override Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-        var responseHttp = await repository.GetAsync<List<Country>>("api/countries");
-        Countries = responseHttp.Response;
-    }
-}

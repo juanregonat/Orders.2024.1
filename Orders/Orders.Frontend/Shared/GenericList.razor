@@ -1,0 +1,48 @@
+﻿@typeparam Titem
+
+
+@if (MyList is null)
+{
+    @if (Loading is null)
+    {
+        <div class="d-flex justify-content-center align-items-center">
+            <img src="https://assets-v2.lottiefiles.com/a/91cc0ece-1150-11ee-b7cb-d3afb5c0c001/QNF78Uk4YE.gif" height="640" width="640" />
+
+        </div>
+    }
+    else
+    {
+        @Loading
+    }
+}
+else if (MyList.Count == 0)
+{
+    @if (NoRecords is null)
+    {
+        <p>No hay registros para mostrar</p>
+
+    }
+    else
+    {
+        @NoRecords
+    }
+}
+else
+    {
+        @Body
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
