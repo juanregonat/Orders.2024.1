@@ -11,7 +11,9 @@ namespace Orders.Frontend.Pages.Countries
         private CountryForm? countryForm;
 
         [Inject] private IRepository repository { get; set; } = null!;
+        //alertas personalizadas
         [Inject] private SweetAlertService sweetAlertService { get; set; } = null!;
+        // manejo de la navegación: ir de una pagina a otra
         [Inject] private NavigationManager navigationManager { get; set; } = null!;
 
         [EditorRequired, Parameter] public int Id { get; set; }
@@ -29,8 +31,8 @@ namespace Orders.Frontend.Pages.Countries
                 {
                     var message = await responseHttp.GetErrorMessageAsync();
                     await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                    return;
                 }
+                return;
             }
             else 
             {

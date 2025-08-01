@@ -25,7 +25,7 @@ namespace Orders.Frontend.Pages.Countries
             {
                 var message = await responseHtpp.GetErrorMessageAsync();
                 //le pasamos el error a sweetAlert
-                await sweetAlertService.FireAsync("Error", message);
+                await sweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
 
