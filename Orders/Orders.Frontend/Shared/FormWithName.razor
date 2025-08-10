@@ -1,16 +1,18 @@
-﻿@* si estamos navegando y me quiero ir, primero que aplique este metodo (OnBeforeInternalNavigation) *@
-<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation"/>
+﻿@typeparam TModel where TModel : IEntityWithName
+
+@* si estamos navegando y me quiero ir, primero que aplique este metodo (OnBeforeInternalNavigation) *@
+<NavigationLock OnBeforeInternalNavigation="OnBeforeInternalNavigation" />
 
 @* Agregamos el contexto al formulario y qué debe hacer cuando esté terminado*@
 <EditForm EditContext="editContext" OnValidSubmit="OnValidSubmit">
     @* acá se pintan los errores de las data anotation del Shared*@
-    <DataAnnotationsValidator/>
-    
+    <DataAnnotationsValidator />
+
     <div class="mb-3">
-        <label>País</label>
+        <label>@Label</label>
         <div>
-            <InputText class="form-control" @bind-Value="@Country.Name"></InputText> @*bind me relaciona el campo *@
-            <ValidationMessage For="@(() => Country.Name)"></ValidationMessage> @*activamos las validaciones cobre el campo Country.Name*@
+            <InputText class="form-control" @bind-Value="@Model.Name"></InputText> @*bind me relaciona el campo *@
+            <ValidationMessage For="@(() => Model.Name)"></ValidationMessage> @*activamos las validaciones cobre el campo Country.Name*@
         </div>
     </div>
 
@@ -19,4 +21,3 @@
     <button class="btn btn-success" @onclick="ReturnAction">Regresar</button> @*este dispara el returAction de CountryForm*@
 
 </EditForm>
-

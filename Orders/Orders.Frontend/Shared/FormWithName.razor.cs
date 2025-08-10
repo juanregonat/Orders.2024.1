@@ -2,18 +2,22 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Routing;
+using Orders.Shared.Interfaces;
 using Orders.Shared.Entities;
 
-namespace Orders.Frontend.Pages.Countries
+namespace Orders.Frontend.Shared
 {
-    // video 8
-    public partial class CountryForm //este form es para crear y para editar paises
+    public partial class FormWithName <TModel> where TModel : IEntityWithName //le decimos que este formulario es del tipo Tmodel que implemente IEntityWithName
     {
-        private EditContext editContext = null!;
-        //el edit context es el contexto de edicion.
+        private EditContext editContext = null!; //el edit context es el contexto de edicion.
 
-        //acá le pasa el pais a crear o editar. Con data notation se hace obligatorio el pase del pais
-        [EditorRequired, Parameter] public Country Country { get; set; } = null!;
+        //VIDEO 15: formulario generico. Basado en el formulario país, se tranforma en uno genérico
+
+        //acá le pasala entidad a crear o editar. Con data notation se hace obligatorio que me pase un modelo
+        [EditorRequired, Parameter] public TModel Model { get; set; } = default!;
+        
+        //acá le pasala la label del modelo
+        [EditorRequired, Parameter] public string Label { get; set; } = null!;
 
         //cuando el formulario aprueba todas las validaciones, aca se pasa código para hacer algo (crear o editar)
         //cuando se reciben componentes Razor, se pasa renderFragment
@@ -23,7 +27,7 @@ namespace Orders.Frontend.Pages.Countries
         //boton de cancelar edicion:
         [EditorRequired, Parameter] public EventCallback ReturnAction { get; set; }
 
-        //errores personalizados. Se injecta
+        //errores personalizados. Se injecta el sweetAlert
         [Inject] public SweetAlertService SweetAlertService { get; set; } = null!;
 
         //para evitar que los datos cargados se pierdan al ir a otra página (todo este bloque de codigo)
@@ -31,7 +35,7 @@ namespace Orders.Frontend.Pages.Countries
 
         protected override void OnInitialized()
         {
-            editContext = new(Country);
+            editContext = new(Model);
         }
 
         private async Task OnBeforeInternalNavigation(LocationChangingContext context)
@@ -53,7 +57,7 @@ namespace Orders.Frontend.Pages.Countries
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
-            
+
             //para lanzar la alerta, debemos confirmar. 
             var confirm = string.IsNullOrEmpty(result.Value);
 

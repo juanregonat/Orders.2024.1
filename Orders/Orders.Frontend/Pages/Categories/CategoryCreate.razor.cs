@@ -3,24 +3,23 @@ using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
 using Orders.Frontend.Shared;
 using Orders.Shared.Entities;
-using System.Reflection;
 
-namespace Orders.Frontend.Pages.Countries
+namespace Orders.Frontend.Pages.Categories
 {
-    public partial class CountryCreate
+    public partial class CategoryCreate
     {
-        private Country country = new();
-        private FormWithName<Country>? countryForm; //es la representación del codigo razor en el codigo c#
+        private Category category = new();
+        private FormWithName<Category>? categoryForm; //es la representación del codigo razor en el codigo c#
 
         [Inject] private IRepository Repository { get; set; } = null!;
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        //metodo que crea el pais (solo cuando ya pasó las validaciones)
+        //metodo que crea la categoria (solo cuando ya pasó las validaciones)
         private async Task CreateAsync()
         {
             //hago el post y si el backend me devuelve el error, lo levanto
-            var responseHtpp = await Repository.PostAsync("api/countries", country);
+            var responseHtpp = await Repository.PostAsync("api/categories", category);
 
             if (responseHtpp.Error)
             {
@@ -32,7 +31,7 @@ namespace Orders.Frontend.Pages.Countries
 
             Return();// si todo fue exitoso, se va a la pagina countries
 
-            //aca agrega una tostada que dice "pais agregado"
+            //aca agrega una tostada que dice "categoria agregada"
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -45,8 +44,8 @@ namespace Orders.Frontend.Pages.Countries
 
         private void Return()
         {
-            countryForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo("/countries");
+            categoryForm!.FormPostedSuccessfully = true;
+            NavigationManager.NavigateTo("/categories");
         }
     }
 }

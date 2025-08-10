@@ -4,12 +4,12 @@ using Orders.Frontend.Repositories;
 using Orders.Frontend.Shared;
 using Orders.Shared.Entities;
 
-namespace Orders.Frontend.Pages.Countries
+namespace Orders.Frontend.Pages.Categories
 {
-    public partial class CountryEdit
+    public partial class CategoryEdit
     {
-        private Country? country;
-        private FormWithName<Country>? countryForm; //es la representación del codigo razor en el codigo c#
+        private Category? category;
+        private FormWithName<Category>? categoryForm; //es la representación del codigo razor en el codigo c#
 
         [Inject] private IRepository Repository { get; set; } = null!;
         //alertas personalizadas
@@ -21,12 +21,12 @@ namespace Orders.Frontend.Pages.Countries
 
         protected override async Task OnParametersSetAsync()
         {
-            var responseHttp = await Repository.GetAsync<Country>($"/api/countries/{Id}");
+            var responseHttp = await Repository.GetAsync<Category>($"/api/categories/{Id}");
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/countries");
+                    NavigationManager.NavigateTo("/categories");
                 }
                 else
                 {
@@ -35,14 +35,14 @@ namespace Orders.Frontend.Pages.Countries
                 }
                 return;
             }
-            else 
+            else
             {
-                country = responseHttp.Response;
+                category = responseHttp.Response;
             }
         }
         private async Task EditAsync()
         {
-            var responseHttp = await Repository.PutAsync("/api/countries", country);
+            var responseHttp = await Repository.PutAsync("/api/categories", category);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -50,7 +50,7 @@ namespace Orders.Frontend.Pages.Countries
                 return;
             }
 
-            Return();// si todo fue exitoso, se va a la pagina countries
+            Return();// si todo fue exitoso, se va a la pagina categories
 
             //aca agrega una tostada que dice "pais agregado"
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
@@ -65,8 +65,8 @@ namespace Orders.Frontend.Pages.Countries
 
         private void Return()
         {
-            countryForm!.FormPostedSuccessfully = true;
-            NavigationManager.NavigateTo("/countries");
+            categoryForm!.FormPostedSuccessfully = true;
+            NavigationManager.NavigateTo("/categories");
         }
     }
 }

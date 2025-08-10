@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
 
-namespace Orders.Frontend.Pages.Countries
+namespace Orders.Frontend.Pages.Categories
 {
-    public partial class CountriesIndex
+    public partial class CategoriesIndex
     {
         [Inject] private IRepository Repository { get; set; } = null!;
 
@@ -14,7 +14,7 @@ namespace Orders.Frontend.Pages.Countries
         // manejo de la navegación: ir de una pagina a otra
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
-        public List<Country>? Countries { get; set; }
+        public List<Category>? Categories{ get; set; }
 
 
         protected async override Task OnInitializedAsync()
@@ -25,7 +25,7 @@ namespace Orders.Frontend.Pages.Countries
 
         private async Task LoadAsync()
         {
-            var responseHttp = await Repository.GetAsync<List<Country>>("api/countries");
+            var responseHttp = await Repository.GetAsync<List<Category>>("api/categories");
 
             //si va al backend y hay un error:
             if (responseHttp.Error)
@@ -35,16 +35,16 @@ namespace Orders.Frontend.Pages.Countries
                 return;
             }
 
-            Countries = responseHttp.Response;            
+            Categories = responseHttp.Response;
         }
 
-        private async Task DeleteAsync(Country country)
+        private async Task DeleteAsync(Category category)
         {
             //configuracion de alerta personalizada
             var result = await SweetAlertService.FireAsync(new SweetAlertOptions
             {
                 Title = "Confirmación",
-                Text = $"Estas seguro de querer borrar el país: {country.Name}?",
+                Text = $"Estas seguro de querer borrar la categoría: {category.Name}?",
                 Icon = SweetAlertIcon.Question,
                 ShowCancelButton = true,
             });
@@ -55,26 +55,26 @@ namespace Orders.Frontend.Pages.Countries
             }
 
             //si ya confirma que lo quiere borrar, entonces así llamamos al delete del repository
-            var responseHttp = await Repository.DeleteAsync<Country>($"api/countries/{country.Id}");
+            var responseHttp = await Repository.DeleteAsync<Category>($"api/categories/{category.Id}");
 
             //si lo trato de borrar y hay errores:
             if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode == System.Net.HttpStatusCode.NotFound)
                 {
-                    NavigationManager.NavigateTo("/countries");
+                    NavigationManager.NavigateTo("/categories");
                 }
                 else
                 {
                     var message = await responseHttp.GetErrorMessageAsync();
                     await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 }
-                 return;
+                return;
             }
 
             await LoadAsync();
 
-            //aca agrega una tostada que dice "pais eliminado"
+            //aca agrega una tostada que dice "categoria eliminada"
             var toast = SweetAlertService.Mixin(new SweetAlertOptions
             {
                 Toast = true,
@@ -82,7 +82,7 @@ namespace Orders.Frontend.Pages.Countries
                 ShowConfirmButton = true,
                 Timer = 3000
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Pais borrado con exito");       
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Categoría borrada con éxito");
 
         }
     }
