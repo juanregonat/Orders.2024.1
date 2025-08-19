@@ -1,5 +1,4 @@
-﻿
-using Orders.Shared.Entities;
+﻿using Orders.Shared.Entities;
 
 namespace Orders.Backend.Data
 {
@@ -17,7 +16,6 @@ namespace Orders.Backend.Data
             await _context.Database.EnsureCreatedAsync();
             await CheckCountriesAsync();
             await CheckCategoriesAsync();
-
         }
 
         private async Task CheckCategoriesAsync()
@@ -36,10 +34,61 @@ namespace Orders.Backend.Data
         {
             if (!_context.Countries.Any())
             {
-                _context.Countries.Add(new Country { Name = "Argentina" });
-                _context.Countries.Add(new Country { Name = "Brasil" });
-                _context.Countries.Add(new Country { Name = "Chile" });
-                _context.Countries.Add(new Country { Name = "Ecuador" });
+                _ = _context.Countries.Add(new Country
+                {
+                    Name = "Colombia",
+                    States = [
+                        new State(){
+                            Name = "Antioquía",
+                            Cities = [
+                                new () { Name = "Medellin"},
+                                new () { Name = "Itagui"},
+                                new () { Name = "Envigado"},
+                                new () { Name = "Bello"},
+                                new () { Name = "Rionegro"},
+                                ]
+                        },
+                            new State(){
+                            Name = "Bogotá",
+                            Cities = [
+                                new () { Name = "Usaquen"},
+                                new () { Name = "Champinero"},
+                                new () { Name = "Santa Fe"},
+                                new () { Name = "Useme"},
+                                new () { Name = "Bosa"},
+                                ]
+                        },
+                        ]
+                });
+                _ = _context.Countries.Add(new Country
+                {
+                    Name = "Argentina",
+                    States = [
+                        new State(){
+                            Name = "Cdad Buenos Aires",
+                            Cities = [
+                                new () { Name = "Almagro"},
+                                new () { Name = "Boedo"},
+                                new () { Name = "Caballito"},
+                                new () { Name = "Coghland"},
+                                new () { Name = "Flores"},
+                                ]
+                        },
+                            new State(){
+                            Name = "Buenos Aires",
+                            Cities = [
+                                new () { Name = "La Plata"},
+                                new () { Name = "Berazategui"},
+                                new () { Name = "Campana"},
+                                new () { Name = "Diaureaux"},
+                                new () { Name = "Ensenada"},
+                                ]
+                        },
+                        ]
+                });
+
+
+
                 await _context.SaveChangesAsync();
             }
         }
