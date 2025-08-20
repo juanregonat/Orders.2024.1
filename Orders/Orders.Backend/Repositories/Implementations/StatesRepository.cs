@@ -19,7 +19,7 @@ namespace Orders.Backend.Repositories.Implementations
         {
             var state = await _context.States
                .Include(s => s.Cities!)
-               .FirstOrDefaultAsync(state => state.Id == Id);
+               .FirstOrDefaultAsync(s => s.Id == Id);
 
             if (state == null)
             {

@@ -15,6 +15,13 @@ namespace Orders.Backend.UnitOfWork.Implementation
         }
 
         public override async Task<ActionResponse<IEnumerable<State>>> GetAsync() => await _statesRepository.GetAsync();
+        
+        //Version extendida:
+        //public override async Task<ActionResponse<IEnumerable<State>>> GetAsync()
+        //{
+        //    var result = await _statesRepository.GetAsync();
+        //    return result;
+        //}
 
         public override async Task<ActionResponse<State>> GetAsync(int id) => await _statesRepository.GetAsync(id);
     }

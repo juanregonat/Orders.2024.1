@@ -4,12 +4,12 @@ using Orders.Shared.Entities;
 
 namespace Orders.Backend.Controllers
 {
+
     [ApiController]
     [Route("api/[controller]")]
-
-    public class CitiesControllers : GenericController<City>
+    public class CitiesController : GenericController<City>
     {
-        public CitiesControllers(IGenericUnitOfWork<City> unitOfWork) : base(unitOfWork)
+        public CitiesController(IGenericUnitOfWork<City> unitOfWork) : base(unitOfWork)
         {
         }
     }

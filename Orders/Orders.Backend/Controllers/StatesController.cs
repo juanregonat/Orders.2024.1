@@ -4,40 +4,38 @@ using Orders.Shared.Entities;
 
 namespace Orders.Backend.Controllers
 {
-    public class StatesController
+ 
+    [ApiController]
+    [Route("api/[controller]")]
+    public class StateController : GenericController<State>
     {
-        [ApiController]
-        [Route("api/[controller]")]
-        public class StateController : GenericController<State>
+        private readonly IStatesUnitOfWork _statesUnitOfWork;
+
+        public StateController(IGenericUnitOfWork<State> unitOfWork, IStatesUnitOfWork statesUnitOfWork) : base(unitOfWork)
         {
-            private readonly IStatesUnitOfWork _statesUnitOfWork;
+            _statesUnitOfWork = statesUnitOfWork;
+        }
 
-            public StateController(IGenericUnitOfWork<State> unitOfWork, IStatesUnitOfWork statesUnitOfWork) : base(unitOfWork)
+        [HttpGet]
+        public override async Task<IActionResult> GetAsync()
+        {
+            var response = await _statesUnitOfWork.GetAsync();
+            if (response.WasSuccess)
             {
-                _statesUnitOfWork = statesUnitOfWork;
+                return Ok(response.Result);
             }
+            return BadRequest();
+        }
 
-            [HttpGet]
-            public override async Task<IActionResult> GetAsync()
+        [HttpGet("{id}")]
+        public override async Task<IActionResult> GetAsync(int id)
+        {
+            var response = await _statesUnitOfWork.GetAsync(id);
+            if (response.WasSuccess)
             {
-                var response = await _statesUnitOfWork.GetAsync();
-                if (response.WasSuccess)
-                {
-                    return Ok(response.Result);
-                }
-                return BadRequest();
+                return Ok(response.Result);
             }
-
-            [HttpGet("{id}")]
-            public override async Task<IActionResult> GetAsync(int id)
-            {
-                var response = await _statesUnitOfWork.GetAsync(id);
-                if (response.WasSuccess)
-                {
-                    return Ok(response.Result);
-                }
-                return NotFound(response.Messagge);
-            }
+            return NotFound(response.Messagge);
         }
     }
 }
