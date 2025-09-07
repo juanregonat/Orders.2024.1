@@ -24,9 +24,11 @@ builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepositor
 builder.Services.AddScoped(typeof(IGenericUnitOfWork<>), typeof(GenericUnitOfWork<>));
 
 builder.Services.AddScoped<ICountriesRepository, CountriesRepository>();
+builder.Services.AddScoped<ICitiesRepository, CitiesRepository>();
 builder.Services.AddScoped<IStatesRepository, StatesRepository>();
 
 builder.Services.AddScoped<ICountriesUnitOfWork, CountriesUnitOfWork>();
+builder.Services.AddScoped<ICitiesUnitOfWork, CitiesUnitOfWork>();
 builder.Services.AddScoped<IStatesUnitOfWork, StatesUnitOfWork>();
 
 
