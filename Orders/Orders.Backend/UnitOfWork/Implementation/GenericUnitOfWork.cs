@@ -18,7 +18,7 @@ namespace Orders.Backend.UnitOfWork.Implementation
           _repository.GetAsync(pagination);
 
         public virtual async Task<ActionResponse<int>> GetTotalPagesAsync(PaginationDTO pagination) => await _repository.GetTotalPagesAsync(pagination);
-
+        
         public virtual async Task<ActionResponse<T>> AddAsync(T model) => await _repository.AddAsync(model);
 
         public virtual async Task<ActionResponse<T>> DeleteAsync(int Id) => await _repository.DeleteAsync(Id);

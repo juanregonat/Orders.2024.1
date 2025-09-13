@@ -4,17 +4,20 @@
 
 <div class="mb-3">
     <a class="btn btn-primary" href="/countries/create">Nuevo país</a>
-
 </div>
 
 <GenericList MyList ="Countries">
     <Body>
+        <Pagination CurrentPage="currentPage"
+            TotalPages="totalPages"
+            SelectedPage="SelectedPageAsync" />
+
     <table class="table table-striped">
         <thead>
             <tr>
-                <th>Nombre de pais</th>
-                <th>Departamentos / Estados</th>
-                <th></th>
+                <th>Pais</th>
+                <th style="width:210px">Departamentos / Estados</th>
+                <th style="width:210px"></th>
             </tr>
         </thead>
         <tbody>

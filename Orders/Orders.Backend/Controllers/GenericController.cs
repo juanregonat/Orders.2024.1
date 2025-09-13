@@ -38,7 +38,7 @@ namespace Orders.Backend.Controllers
         [HttpGet("totalPages")]
         public virtual async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
         {
-            var action = await _unitOfWork.GetAsync(pagination);
+            var action = await _unitOfWork.GetTotalPagesAsync(pagination);
             if (action.WasSuccess)
             {
                 return Ok(action.Result);
