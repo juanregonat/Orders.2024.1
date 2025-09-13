@@ -9,6 +9,9 @@ namespace Orders.Frontend.Pages.States
     public partial class StateDetails
     {
         private State? state;
+        private List<City> cities;
+        private int currentPage = 1;
+        private int totalPages = 10;
 
         [Parameter] public int StateId { get; set; }
 
@@ -24,23 +27,87 @@ namespace Orders.Frontend.Pages.States
             await LoadAsync();
         }
 
-        private async Task LoadAsync()
-        {
-            var responseHttp = await Repository.GetAsync<State>($"/api/states/{StateId}");
+        ////metodo dejado de lado en el video 34
+        //private async Task LoadAsync()
+        //{
+        //    var responseHttp = await Repository.GetAsync<State>($"/api/states/{StateId}");
 
+        //    if (responseHttp.Error)
+        //    {
+        //        if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+        //        {
+        //            NavigationManager.NavigateTo("/countries"); // si no encuntra el estado, se vuelve a "Paises"
+        //            return;
+        //        }
+        //        var message = await responseHttp.GetErrorMessageAsync();
+        //        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+        //        return;
+        //    }
+
+        //    state = responseHttp.Response; // si no hubo errores, llegó acá 
+        //}
+
+        private async Task SelectedPageAsync(int page)
+        {
+            currentPage = page;
+            await LoadAsync(page);
+        }
+
+        private async Task LoadAsync(int page = 1)
+        {
+            var ok = await LoadStateAsync();
+            if (ok)
+            {
+                ok = await LoadCitiesAsync(page);
+                if (ok)
+                {
+                    await LoadPagesAsync();
+                }
+            }
+        }
+
+        private async Task LoadPagesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<int>($"api/cities/totalPages?id={StateId}");
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/countries"); // si no encuntra el estado, se vuelve a "Paises"
-                    return;
-                }
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
+            totalPages = responseHttp.Response;
+        }
 
-            state = responseHttp.Response; // si no hubo errores, llegó acá 
+        private async Task<bool> LoadCitiesAsync(int page)
+        {
+            var responseHttp = await Repository.GetAsync<List<City>>($"api/cities?id={StateId}&page={page}");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return false;
+            }
+            cities = responseHttp.Response;
+            return true;
+        }
+
+        private async Task<bool> LoadStateAsync()
+        {
+            var responseHttp = await Repository.GetAsync<State>($"api/states/{StateId}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/countries");
+                    return false;
+                }
+
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return false;
+            }
+            state = responseHttp.Response;
+            return true;
         }
 
 
