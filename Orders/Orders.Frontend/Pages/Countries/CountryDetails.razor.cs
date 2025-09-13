@@ -9,38 +9,101 @@ namespace Orders.Frontend.Pages.Countries
     public partial class CountryDetails
     {
         private Country? country;
-
-        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
-
-        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
-
-        [Inject] private IRepository Repository { get; set; } = null!;
+        private List<State>? states;
+        private int currentPage = 1;
+        private int totalPages;
 
         [Parameter] public int CountryId { get; set; }
+        [Inject] private NavigationManager NavigationManager { get; set; } = null!;
+        [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
+        [Inject] private IRepository Repository { get; set; } = null!;
 
         protected override async Task OnInitializedAsync()
         {
             await LoadAsync();
         }
 
-        private async Task LoadAsync() {
-            var responseHttp = await Repository.GetAsync<Country>($"/api/countries/{CountryId}");
+        private async Task SelectedPageAsync(int page)
+        {
+            currentPage = page;
+            await LoadAsync(page);
+        }
 
+        //Metodo dejado de lado por la paginacion del Video 34
+        //private async Task LoadAsync() {
+        //    var responseHttp = await Repository.GetAsync<Country>($"/api/countries/{CountryId}");
+
+        //    if (responseHttp.Error)
+        //    {
+        //        if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+        //        {
+        //            NavigationManager.NavigateTo("/countries"); // si no encuntra el pais, se vuelve a "Paises"
+        //            return;
+        //        }
+        //        var message = await responseHttp.GetErrorMessageAsync();
+        //        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+        //        return;
+        //    }
+
+        //    country = responseHttp.Response; // si no hubo errores, llegó acá con un pais.
+        //}
+
+        private async Task LoadAsync(int page = 1)
+        {
+            var ok = await LoadCountryAsync();
+            if (ok)
+            {
+                ok = await LoadStatesAsync(page);
+                if (ok)
+                {
+                    await LoadPageAsync();
+                }
+            }
+        }
+
+        private async Task LoadPageAsync()
+        {
+            //var responseHttp = await Repository.GetAsync<int>($"/api/countries/{CountryId}");
+            var responseHttp = await Repository.GetAsync<int>($"api/states/totalPages?id={CountryId}");
             if (responseHttp.Error)
             {
-                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
-                {
-                    NavigationManager.NavigateTo("/countries"); // si no encuntra el pais, se vuelve a "Paises"
-                    return;
-                }
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
                 return;
             }
-
-            country = responseHttp.Response; // si no hubo errores, llegó acá con un pais.
+            totalPages = responseHttp.Response;
         }
 
+        private async Task<bool> LoadStatesAsync(int page)
+        {
+            var responseHttp = await Repository.GetAsync<List<State>>($"api/states?id={CountryId}&page={page}");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return false;                
+            }
+            states = responseHttp.Response;
+            return true;
+        }
+
+        private async Task<bool> LoadCountryAsync()
+        {
+            var responseHttp = await Repository.GetAsync<Country>($"/api/countries/{CountryId}");
+            if (responseHttp.Error)
+            {
+                if (responseHttp.HttpResponseMessage.StatusCode == HttpStatusCode.NotFound)
+                {
+                    NavigationManager.NavigateTo("/countries");
+                    return false;
+                }
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return false;
+            }
+            country = responseHttp.Response;
+            return true;
+        }
 
         private async Task DeleteAsync(State state)
         {
@@ -61,7 +124,7 @@ namespace Orders.Frontend.Pages.Countries
             }
 
             var responseHttp = await Repository.DeleteAsync<State>($"/api/states/{state.Id}");
-            if (responseHttp.Error) 
+            if (responseHttp.Error)
             {
                 if (responseHttp.HttpResponseMessage.StatusCode != HttpStatusCode.NotFound)
                 {
@@ -80,7 +143,7 @@ namespace Orders.Frontend.Pages.Countries
                 ShowConfirmButton = true,
                 Timer = 3000
             });
-            await toast.FireAsync(icon: SweetAlertIcon.Success,message:"Registro borrado con éxito");
+            await toast.FireAsync(icon: SweetAlertIcon.Success, message: "Registro borrado con éxito");
         }
     }
 }

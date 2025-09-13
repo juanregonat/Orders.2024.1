@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Components;
-using System.Runtime.CompilerServices;
 
 namespace Orders.Frontend.Shared
 {
@@ -8,17 +7,13 @@ namespace Orders.Frontend.Shared
         private List<PageModel> links = null!;
 
         [Parameter] public int CurrentPage { get; set; } = 1;
-
         [Parameter] public int TotalPages { get; set; } = 1;
-
         [Parameter] public int Radio { get; set; } = 10;
-
         [Parameter] public EventCallback<int> SelectedPage { get; set; }
 
         protected override void OnParametersSet()
         {
             links = new List<PageModel>();
-
             links.Add(new PageModel
             {
                 Text = "Anterior",
@@ -53,8 +48,6 @@ namespace Orders.Frontend.Shared
             await SelectedPage.InvokeAsync(pageModel.Page);
         }
 
-
-
         private class PageModel
         {
             public string Text { get; set; } = null!;
@@ -62,7 +55,6 @@ namespace Orders.Frontend.Shared
             public int Page { get; set; }
 
             public bool Enable { get; set; }
-            
         }
     }
 }

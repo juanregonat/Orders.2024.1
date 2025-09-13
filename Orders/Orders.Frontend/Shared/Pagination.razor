@@ -5,12 +5,9 @@
             <li @onclick=@(()=>InternalSelectedPage(link)) 
                 style = "cursor: pointer"
                 class="page-item @(link.Enable ? null : "disabled") @(link.Enable ? "active" : null)">
-                <a> class = "page-link"@link.Text</a>
+                <a class = "page-link">@link.Text</a>
 
-            </li>
-
-            
+            </li>            
         }
     </ul>
-
 </nav>
