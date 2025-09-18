@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Orders.Backend.UnitOfWork.Implementation;
 using Orders.Backend.UnitOfWork.Interfaces;
 using Orders.Shared.DTOs;
 using Orders.Shared.Entities;
@@ -46,6 +47,17 @@ namespace Orders.Backend.Controllers
                 return Ok(response.Result);
             }
             return NotFound(response.Messagge);
+        }
+
+        [HttpGet("totalPages")]
+        public override async Task<IActionResult> GetPagesAsync([FromQuery] PaginationDTO pagination)
+        {
+            var action = await _countriesUnitOfWork.GetTotalPagesAsync(pagination);
+            if (action.WasSuccess)
+            {
+                return Ok(action.Result);
+            }
+            return BadRequest();
         }
 
         ////VERSION DADA DE BAJA EN VIDEOS 10 - 11
