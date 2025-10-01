@@ -8,7 +8,6 @@ namespace Orders.Frontend.Pages.Countries
     public partial class CountriesIndex
     {
         private int currentPage = 1;
-
         private int totalPages;
 
         [Inject] private IRepository Repository { get; set; } = null!;

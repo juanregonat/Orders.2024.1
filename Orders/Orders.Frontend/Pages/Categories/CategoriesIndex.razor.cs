@@ -7,8 +7,10 @@ namespace Orders.Frontend.Pages.Categories
 {
     public partial class CategoriesIndex
     {
-        [Inject] private IRepository Repository { get; set; } = null!;
+        private int currentPage = 1;
+        private int totalPages;
 
+        [Inject] private IRepository Repository { get; set; } = null!;
         //alertas personalizadas
         [Inject] private SweetAlertService SweetAlertService { get; set; } = null!;
         // manejo de la navegación: ir de una pagina a otra
@@ -23,19 +25,63 @@ namespace Orders.Frontend.Pages.Categories
         }
 
 
-        private async Task LoadAsync()
+        //DADO DE BAJA VIDEO 33:
+        //private async Task LoadAsync()
+        //{
+        //    var responseHttp = await Repository.GetAsync<List<Category>>("api/categories");
+
+        //    //si va al backend y hay un error:
+        //    if (responseHttp.Error)
+        //    {
+        //        var message = await responseHttp.GetErrorMessageAsync();
+        //        await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+        //        return;
+        //    }
+
+        //    Categories = responseHttp.Response;
+        //}
+
+        private async Task SelectedPageAsync(int page)
         {
-            var responseHttp = await Repository.GetAsync<List<Category>>("api/categories");
+            currentPage = page;
+            await LoadAsync(page);
+        }
+
+        private async Task LoadAsync(int page = 1)
+        {
+            var ok = await LoadListAsync(page);
+            if (ok)
+            {
+                await LoadPagesAsync();
+            }
+        }
+
+        private async Task<bool> LoadListAsync(int page)
+        {
+            var responseHttp = await Repository.GetAsync<List<Category>>($"api/categories?page={page}");
 
             //si va al backend y hay un error:
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
                 await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
-                return;
+                return false;
             }
 
             Categories = responseHttp.Response;
+            return true;
+        }
+
+        private async Task LoadPagesAsync()
+        {
+            var responseHttp = await Repository.GetAsync<int>("api/Categories/totalPages");
+            if (responseHttp.Error)
+            {
+                var message = await responseHttp.GetErrorMessageAsync();
+                await SweetAlertService.FireAsync("Error", message, SweetAlertIcon.Error);
+                return;
+            }
+            totalPages = responseHttp.Response;
         }
 
         private async Task DeleteAsync(Category category)

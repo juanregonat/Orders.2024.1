@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using Microsoft.
+    AspNetCore.Components;
 
 namespace Orders.Frontend.Shared
 {
@@ -23,12 +24,35 @@ namespace Orders.Frontend.Shared
 
             for (int i = 1; i <= TotalPages; i++)
             {
-                links.Add(new PageModel
+                if (TotalPages <= Radio)
                 {
-                    Text = $"{i}",
-                    Page = i,
-                    Enable = i == CurrentPage
-                });
+                    links.Add(new PageModel
+                    {
+                        Page = i,
+                        Enable = i == CurrentPage,
+                        Text = $"{i}",
+                    });
+                }
+
+                if (TotalPages > Radio && i <= Radio && CurrentPage <= Radio)
+                {
+                    links.Add(new PageModel
+                    {
+                        Page = i,
+                        Enable = CurrentPage == i,
+                        Text = $"{i}",
+                    });
+                }
+
+                if (CurrentPage > Radio && i > CurrentPage - Radio && i <= CurrentPage)
+                {
+                    links.Add(new PageModel
+                    {
+                        Page = i,
+                        Enable = CurrentPage == i,
+                        Text = $"{i}",
+                    });
+                }
             }
 
             links.Add(new PageModel
