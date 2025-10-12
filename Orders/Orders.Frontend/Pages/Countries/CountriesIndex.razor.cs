@@ -16,6 +16,11 @@ namespace Orders.Frontend.Pages.Countries
         // manejo de la navegación: ir de una pagina a otra
         [Inject] private NavigationManager NavigationManager { get; set; } = null!;
 
+
+        [Parameter, SupplyParameterFromQuery] public string Page { get; set; } = string.Empty;
+
+        [Parameter, SupplyParameterFromQuery] public string Filter { get; set; } = string.Empty;
+
         public List<Country>? Countries { get; set; }
 
 
@@ -32,6 +37,11 @@ namespace Orders.Frontend.Pages.Countries
 
         private async Task LoadAsync(int page = 1)
         {
+            if (!string.IsNullOrWhiteSpace(Page))
+            {
+                page = Convert.ToInt32(Page);
+            }
+
             var ok = await LoadListAsync(page);
             if (ok)
             {
@@ -41,7 +51,13 @@ namespace Orders.Frontend.Pages.Countries
 
         private async Task<bool> LoadListAsync(int page)
         {
-            var responseHttp = await Repository.GetAsync<List<Country>>($"api/countries?page={page}");
+            var url = $"api/countries?page={page}";
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                url += $"&filter={Filter}";
+            }
+
+            var responseHttp = await Repository.GetAsync<List<Country>>(url);
 
             //si va al backend y hay un error:
             if (responseHttp.Error)
@@ -57,7 +73,14 @@ namespace Orders.Frontend.Pages.Countries
 
         private async Task LoadPagesAsync()
         {
-            var responseHttp = await Repository.GetAsync<int>("api/countries/totalPages");
+            var url = "api/countries/totalPages";
+            if (!string.IsNullOrEmpty(Filter))
+            {
+                url += $"?filter={Filter}";
+            }
+
+
+            var responseHttp = await Repository.GetAsync<int>(url);
             if (responseHttp.Error)
             {
                 var message = await responseHttp.GetErrorMessageAsync();
@@ -66,6 +89,21 @@ namespace Orders.Frontend.Pages.Countries
             }
             totalPages = responseHttp.Response;
         }
+
+
+        private async Task CleanFilterAsync()
+        {
+            Filter = string.Empty;
+            await ApplyFilterAsync();
+        }
+
+        private async Task ApplyFilterAsync()
+        {
+            int page = 1;
+            await LoadAsync(page);
+            await SelectedPageAsync(page);
+        }
+
 
         private async Task DeleteAsync(Country country)
         {
