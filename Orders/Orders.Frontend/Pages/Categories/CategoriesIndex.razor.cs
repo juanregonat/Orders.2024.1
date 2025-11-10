@@ -1,12 +1,15 @@
 ﻿using CurrieTechnologies.Razor.SweetAlert2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
 
 namespace Orders.Frontend.Pages.Categories
 {
+    [Authorize(Roles = "Admin")]
+
     public partial class CategoriesIndex
-    {
+    {        
         private int currentPage = 1;
         private int totalPages;
 
