@@ -1,4 +1,5 @@
 ﻿using CurrieTechnologies.Razor.SweetAlert2;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Orders.Frontend.Repositories;
 using Orders.Shared.Entities;
