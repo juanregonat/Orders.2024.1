@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="C:\Users\juanr\source\repos\Orders.2024.1\Orders\Orders.Shared\.editorconfig" />
     <None Include="FormWithName.razor.cs" />
   </ItemGroup>
 
@@ -24,6 +25,10 @@
     <PackageReference Include="Microsoft.AspNet.Razor" Version="3.3.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components" Version="9.0.10" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EditorConfigFiles Remove="C:\Users\juanr\source\repos\Orders.2024.1\Orders\Orders.Shared\.editorconfig" />
   </ItemGroup>
 
 </Project>

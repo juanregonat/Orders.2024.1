@@ -25,7 +25,8 @@ namespace Orders.Backend.Data
             await CheckUserAsync("1010", "Juan", "Regonat", "juanregonat@yopmail.com", "322 311 2020", "calle XXX", UserType.Admin);
         }
 
-        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email, string phone, string address, UserType userType)
+        private async Task<User> CheckUserAsync(string document, string firstName, string lastName, string email,
+            string phone, string address, UserType userType)
         {
             var user = await _usersUnitOfWork.GetUserAsync(email);
             if (user == null)
@@ -75,7 +76,7 @@ namespace Orders.Backend.Data
             {
                 _ = _context.Countries.Add(new Country
                 {
-                    Name = "Colombia",
+                    Name = "Colom bia",
                     States = [
                         new State(){
                             Name = "Antioquía",
