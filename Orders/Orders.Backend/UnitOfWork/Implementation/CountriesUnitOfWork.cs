@@ -22,5 +22,7 @@ namespace Orders.Backend.UnitOfWork.Implementation
         public override async Task<ActionResponse<IEnumerable<Country>>> GetAsync() => await _countriesRepository.GetAsync();
 
         public override async Task<ActionResponse<Country>> GetAsync(int id) => await _countriesRepository.GetAsync(id);
+
+        public async Task<IEnumerable<Country>> GetComboAsync() => await _countriesRepository.GetComboAsync();
     }
 }
