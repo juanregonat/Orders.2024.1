@@ -7,18 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="FormWithName.razor.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="FormWithName.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="C:\Users\juanr\source\repos\Orders.2024.1\Orders\Orders.Shared\.editorconfig" />
-    <None Include="FormWithName.razor.cs" />
   </ItemGroup>
 
   <ItemGroup>
